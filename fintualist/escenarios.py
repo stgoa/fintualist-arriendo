@@ -3,21 +3,13 @@ import numpy_financial as npf
 from pydantic import BaseModel
 
 
-class ParametrosBase(BaseModel):
+class ParametrosSimulacion(BaseModel):
     anios: int = 25
     tasa_rentabilidad: float = 0.05
-
-
-class ParametrosArriendo(ParametrosBase):
     precio_propiedad: float = 5000
     porcentaje_pie: float = 0.20
     tasa_hipotecaria: float = 0.0340
     porcentaje_arriendo: float = 0.0038
-
-
-class ParametrosCompra(ParametrosBase):
-    precio_propiedad: float = 5000
-    porcentaje_pie: float = 0.20
     tasa_plusvalia: float = 0.0120
     porcentaje_remodelaciones: float = 0.0050
     avaluo_exento: float = 1256
@@ -66,16 +58,16 @@ class Escenario:
 class EscenarioArriendo(Escenario):
     """Escenario para el caso de arriendo."""
 
-    def _calcular_valor_futuro_pie(self, params: ParametrosArriendo):
+    def _calcular_valor_futuro_pie(self, params: ParametrosSimulacion):
         pie_inicial = params.precio_propiedad * params.porcentaje_pie
         return self.calcular_valor_futuro(
             params.tasa_rentabilidad, params.anios, valor_presente=pie_inicial
         )
 
-    def _calcular_arriendo_mensual(self, params: ParametrosArriendo):
+    def _calcular_arriendo_mensual(self, params: ParametrosSimulacion):
         return params.porcentaje_arriendo * params.precio_propiedad
 
-    def _calcular_valor_futuro_delta_dividendo(self, params: ParametrosArriendo):
+    def _calcular_valor_futuro_delta_dividendo(self, params: ParametrosSimulacion):
         monto_credito = params.precio_propiedad * (1 - params.porcentaje_pie)
         pago_mensual_dividendo = self.calcular_pago_mensual(
             params.tasa_hipotecaria, params.anios, monto_credito
@@ -87,7 +79,7 @@ class EscenarioArriendo(Escenario):
             tasa_mensual_compuesta, params.anios * 12, pago=delta_mensual
         )
 
-    def calcular_capital_relativo_final(self, params: ParametrosArriendo):
+    def calcular_capital_relativo_final(self, params: ParametrosSimulacion):
         vf_pie = self._calcular_valor_futuro_pie(params)
         vf_delta = self._calcular_valor_futuro_delta_dividendo(params)
         return vf_pie + vf_delta
@@ -96,12 +88,12 @@ class EscenarioArriendo(Escenario):
 class EscenarioCompra(Escenario):
     """Escenario para el caso de compra."""
 
-    def _calcular_valor_futuro_propiedad(self, params: ParametrosCompra):
+    def _calcular_valor_futuro_propiedad(self, params: ParametrosSimulacion):
         return self.calcular_valor_futuro(
             params.tasa_plusvalia, params.anios, valor_presente=params.precio_propiedad
         )
 
-    def _calcular_valor_futuro_contribuciones(self, params: ParametrosCompra):
+    def _calcular_valor_futuro_contribuciones(self, params: ParametrosSimulacion):
         tasa_efectiva_contribuciones = self.calcular_tasa_efectiva_anual_contribuciones(
             params.precio_propiedad,
             params.avaluo_exento,
@@ -119,7 +111,7 @@ class EscenarioCompra(Escenario):
             pago=costo_trimestral_contribuciones,
         )
 
-    def _calcular_valor_futuro_remodelaciones(self, params: ParametrosCompra):
+    def _calcular_valor_futuro_remodelaciones(self, params: ParametrosSimulacion):
         costo_anual_remodelaciones = (
             params.porcentaje_remodelaciones * params.precio_propiedad
         )
@@ -127,7 +119,7 @@ class EscenarioCompra(Escenario):
             params.tasa_rentabilidad, params.anios, pago=costo_anual_remodelaciones
         )
 
-    def calcular_capital_relativo_final(self, params: ParametrosCompra):
+    def calcular_capital_relativo_final(self, params: ParametrosSimulacion):
         vf_propiedad = self._calcular_valor_futuro_propiedad(params)
         vf_contribuciones = self._calcular_valor_futuro_contribuciones(params)
         vf_remodelaciones = self._calcular_valor_futuro_remodelaciones(params)

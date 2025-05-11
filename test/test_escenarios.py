@@ -2,8 +2,7 @@
 from fintualist.escenarios import (
     EscenarioArriendo,
     EscenarioCompra,
-    ParametrosArriendo,
-    ParametrosCompra,
+    ParametrosSimulacion,
     Escenario,
 )
 import numpy as np
@@ -11,7 +10,7 @@ import numpy as np
 
 class TestEscenarioArriendo:
     def test_capital_relativo_final_articulo(self):
-        params_articulo = ParametrosArriendo(
+        params_articulo = ParametrosSimulacion(
             precio_propiedad=5000,
             porcentaje_pie=0.20,
             tasa_hipotecaria=0.0340,
@@ -25,7 +24,7 @@ class TestEscenarioArriendo:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=0)
 
     def test_valor_futuro_pie(self):
-        params = ParametrosArriendo(
+        params = ParametrosSimulacion(
             precio_propiedad=5000,
             porcentaje_pie=0.20,
             tasa_rentabilidad=0.0531,
@@ -37,7 +36,7 @@ class TestEscenarioArriendo:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=2)
 
     def test_valor_futuro_delta_dividendo(self):
-        params = ParametrosArriendo(
+        params = ParametrosSimulacion(
             precio_propiedad=5000,
             porcentaje_pie=0.20,
             tasa_hipotecaria=0.0340,
@@ -51,14 +50,14 @@ class TestEscenarioArriendo:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=2)
 
     def test_pago_mensual_arriendo_equivalente(self):
-        params = ParametrosArriendo(precio_propiedad=5000, porcentaje_arriendo=0.0038)
+        params = ParametrosSimulacion(precio_propiedad=5000, porcentaje_arriendo=0.0038)
         escenario = EscenarioArriendo()
         resultado = escenario._calcular_arriendo_mensual(params)
         valor_esperado = 19.00
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=2)
 
     def test_pago_mensual_dividendo(self):
-        params = ParametrosArriendo(
+        params = ParametrosSimulacion(
             precio_propiedad=5000,
             porcentaje_pie=0.20,
             tasa_hipotecaria=0.0340,
@@ -75,7 +74,7 @@ class TestEscenarioArriendo:
 
 class TestEscenarioCompra:
     def test_capital_relativo_final_articulo(self):
-        params_articulo = ParametrosCompra(
+        params_articulo = ParametrosSimulacion(
             precio_propiedad=5000,
             porcentaje_pie=0.20,
             tasa_plusvalia=0.0120,
@@ -93,7 +92,7 @@ class TestEscenarioCompra:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=0)
 
     def test_valor_futuro_propiedad(self):
-        params = ParametrosCompra(
+        params = ParametrosSimulacion(
             precio_propiedad=5000, tasa_plusvalia=0.0120, anios=25
         )
         escenario = EscenarioCompra()
@@ -102,7 +101,7 @@ class TestEscenarioCompra:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=2)
 
     def test_valor_futuro_contribuciones(self):
-        params = ParametrosCompra(
+        params = ParametrosSimulacion(
             precio_propiedad=5000,
             avaluo_exento=33664775 / 26799.01,
             avaluo_cambio_tramo=118571329 / 26799.01,
@@ -117,7 +116,7 @@ class TestEscenarioCompra:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=2)
 
     def test_valor_futuro_remodelaciones(self):
-        params = ParametrosCompra(
+        params = ParametrosSimulacion(
             precio_propiedad=5000,
             porcentaje_remodelaciones=0.0050,
             tasa_rentabilidad=0.0531,
@@ -129,7 +128,7 @@ class TestEscenarioCompra:
         np.testing.assert_almost_equal(resultado, valor_esperado, decimal=1)
 
     def test_tasa_efectiva_anual_contribuciones(self):
-        params = ParametrosCompra(
+        params = ParametrosSimulacion(
             precio_propiedad=5000,
             avaluo_exento=33664775 / 26799.01,
             avaluo_cambio_tramo=118571329 / 26799.01,
