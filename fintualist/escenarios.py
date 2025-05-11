@@ -72,12 +72,15 @@ class EscenarioArriendo(Escenario):
             params.tasa_rentabilidad, params.anios, valor_presente=pie_inicial
         )
 
+    def _calcular_arriendo_mensual(self, params: ParametrosArriendo):
+        return params.porcentaje_arriendo * params.precio_propiedad
+
     def _calcular_valor_futuro_delta_dividendo(self, params: ParametrosArriendo):
         monto_credito = params.precio_propiedad * (1 - params.porcentaje_pie)
         pago_mensual_dividendo = self.calcular_pago_mensual(
             params.tasa_hipotecaria, params.anios, monto_credito
         )
-        pago_mensual_arriendo = params.porcentaje_arriendo * params.precio_propiedad
+        pago_mensual_arriendo = self._calcular_arriendo_mensual(params)
         delta_mensual = pago_mensual_dividendo - pago_mensual_arriendo
         tasa_mensual_compuesta = (1 + params.tasa_rentabilidad) ** (1 / 12) - 1
         return self.calcular_valor_futuro(
