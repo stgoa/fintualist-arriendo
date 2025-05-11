@@ -130,20 +130,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-# GCP credentials
-credentials.json
-
-# data
-data/pdfs/
-data/scrap/
-data/bice
-data/fala
-data/itau
-data/jumbo
-data/archive/
-data/
-
 # Poetry
 poetry.lock
 
@@ -158,8 +144,3 @@ tmp/*
 
 # VS Code
 .vscode/
-
-# Lambda Package
-lambda-package/
-lambda-function.zip
-output.json
