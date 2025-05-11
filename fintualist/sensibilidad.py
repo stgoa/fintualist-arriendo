@@ -26,18 +26,18 @@ class SimuladorSensibilidad:
         self.distribuciones_parametros = distribuciones_parametros
         self.resultados_df = pd.DataFrame()
 
-    def _generar_parametros(self) -> Dict[str, float]:
+    def _generar_parametros(self) -> ParametrosSimulacion:
         """
         Genera un diccionario de parámetros muestreados aleatoriamente
         para la simulación.
 
         Returns:
-            Un diccionario con los parámetros muestreados.
+            Un objeto ParametrosSimulacion con los parámetros generados.
         """
         parametros = {}
         for nombre, distribucion in self.distribuciones_parametros.items():
             parametros[nombre] = distribucion.rvs()
-        return parametros
+        return ParametrosSimulacion(**parametros)
 
     def ejecutar_simulacion(self):
         """
@@ -47,9 +47,10 @@ class SimuladorSensibilidad:
         resultados_compra = []
         parametros_simulaciones = []
         for _ in range(self.num_simulaciones):
-            parametros_dict = self._generar_parametros()
-            parametros = ParametrosSimulacion(**parametros_dict)
-            parametros_simulaciones.append(parametros_dict)
+            # Generar parámetros aleatorios
+            parametros = self._generar_parametros()
+
+            parametros_simulaciones.append(parametros.model_dump())
 
             escenario_arriendo = EscenarioArriendo()
             resultado_arriendo = escenario_arriendo.calcular_capital_relativo_final(
