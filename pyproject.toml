@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fintualist"
+version = "0.1.0"
+description = "Análisis financiero del costo relativo de comprar vs arrendar"
+authors = ["Santiago A. <sarmstrong@uc.cl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^2.2.5"
+matplotlib = "^3.10.3"
+seaborn = "^0.13.2"
+jupyter = "^1.1.1"
+numpy-financial = "^1.0.0"
+plotly = "^6.0.1"
+pydantic = "^2.11.4"
+pytest = "^8.3.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
